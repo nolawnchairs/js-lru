@@ -14,7 +14,7 @@ yarn add @nolawnchairs/lru
 ## Usage
 
 ```ts
-class LRUMap<K extends ScalarType, V>
+class LRUMap<K extends KeyScalar, V>
 ```
 
 | TypeParameter | Description |
@@ -48,7 +48,7 @@ const map = new LRUMap<string, string>(5, [
 To create a collection with unlimited capacity, use the static factory method `unbounded` and just provide an optional iterable of initial values.
 
 ```ts
-static unbounded<K extends ScalarType, V>(entries?: Iterable<[K,V]>): LRUMap<K, V>
+static unbounded<K extends KeyScalar, V>(entries?: Iterable<[K,V]>): LRUMap<K, V>
 ```
 
 ### Properties

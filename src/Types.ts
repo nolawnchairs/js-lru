@@ -7,4 +7,4 @@ export type Discriminator<T, U> = (value: T) => U
 
 export type Nullable<T> = T
 
-export type ScalarType = string | number | symbol
+export type KeyScalar = string | number | symbol

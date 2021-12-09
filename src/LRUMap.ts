@@ -1,18 +1,18 @@
-import { Nullable, ScalarType } from './Types'
+import { Nullable, KeyScalar } from './Types'
 
 export interface MapEntry<K, V> {
   key: K
   value: V
 }
 
-class Entry<K extends ScalarType, V> implements MapEntry<K, V> {
+class Entry<K extends KeyScalar, V> implements MapEntry<K, V> {
   constructor(readonly key: K, readonly value: V) { }
-  static from<K extends ScalarType, V>([key, value]: [K, V]) {
+  static from<K extends KeyScalar, V>([key, value]: [K, V]) {
     return new Entry(key, value)
   }
 }
 
-type FrameObject = { [key: ScalarType]: number }
+type FrameObject = { [key: KeyScalar]: number }
 
 /**
  * Implementation of the ES6 Map interface that maintains a LRU
@@ -24,7 +24,7 @@ type FrameObject = { [key: ScalarType]: number }
  * @template K the type of the map keys, constrained to string, number or symbol
  * @template V the type of the map values
  */
-export class LRUMap<K extends ScalarType, V> {
+export class LRUMap<K extends KeyScalar, V> {
 
   private items: Entry<K, V>[] = []
   private frames: FrameObject = {}
@@ -60,7 +60,7 @@ export class LRUMap<K extends ScalarType, V> {
    * @return {*}  {LRUMap<K,V>}
    * @memberof LRUMap
    */
-  static unbounded<K extends ScalarType, V>(entries?: Iterable<[K, V]>): LRUMap<K, V> {
+  static unbounded<K extends KeyScalar, V>(entries?: Iterable<[K, V]>): LRUMap<K, V> {
     return new LRUMap<K, V>(-1, entries)
   }
 
