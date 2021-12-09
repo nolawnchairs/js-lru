@@ -27,7 +27,7 @@ type FrameObject = { [key: KeyScalar]: number }
 export class LRUMap<K extends KeyScalar, V> {
 
   private items: Entry<K, V>[] = []
-  private frames: FrameObject = {}
+  private frames: Map<K, number> = new Map() // FrameObject = {}
 
   /**
    * Creates an instance of LRUMap.
@@ -36,7 +36,7 @@ export class LRUMap<K extends KeyScalar, V> {
    * @param {Iterable<[K, V]>} [entries] optional iterable of key-value tuples to initiate the map. LRU ordering is applied immediately to initial entries
    * @memberof LRUMap
    */
-  constructor(private readonly capacity: number, entries?: Iterable<[K, V]>) {
+  constructor(readonly capacity: number, entries?: Iterable<[K, V]>) {
     if (capacity === 0 || capacity === 1)
       throw new Error(`Invalid capacity (${capacity}). LRU capacity must be > 1 or unbounded (-1)`)
     if (entries) {
@@ -44,7 +44,7 @@ export class LRUMap<K extends KeyScalar, V> {
       const items = capacity > -1 ? all.slice(0, capacity) : all
       for (let i = 0; i < items.length; i++) {
         this.items.push(Entry.from(items[i]))
-        this.frames[items[i][0]] = i
+        this.frames.set(items[i][0], i)
       }
     }
   }
@@ -65,7 +65,7 @@ export class LRUMap<K extends KeyScalar, V> {
   }
 
   /**
-   * Gets the size of the collection
+   * Gets the size of the collection O(1)
    *
    * @readonly
    * @type {number}
@@ -76,14 +76,14 @@ export class LRUMap<K extends KeyScalar, V> {
   }
 
   /**
-   * Gets an entry value from the map and registers recent use
+   * Gets an entry value from the map and registers recent use O(1)
    *
    * @param {K} key the key
    * @return {*}  {Nullable<V>} the value, which could be null
    * @memberof LRUMap
    */
   get(key: K): Nullable<V> {
-    const index = this.frames[key]
+    const index = this.frames.get(key)
     if (index === undefined)
       return null
     const entry = this.items[index]
@@ -94,14 +94,14 @@ export class LRUMap<K extends KeyScalar, V> {
   }
 
   /**
-   * Peeks at an entry value without registering recent use
+   * Peeks at an entry value without registering recent use O(1)
    *
    * @param {K} key the key
    * @return {*}  {Nullable<V>} the value which could be null
    * @memberof LRUMap
    */
   peek(key: K): Nullable<V> {
-    const index = this.frames[key]
+    const index = this.frames.get(key)
     if (index === undefined)
       return null
     const { value } = this.items[index]
@@ -110,7 +110,7 @@ export class LRUMap<K extends KeyScalar, V> {
 
   /**
    * Sets or replaces an entry in the map with key and
-   * registers recent use
+   * registers recent use O(N)
    *
    * @param {K} key the key
    * @param {V} value the value
@@ -118,7 +118,7 @@ export class LRUMap<K extends KeyScalar, V> {
    */
   set(key: K, value: V): this {
     if (this.has(key)) {
-      const index = this.frames[key]
+      const index = this.frames.get(key)
       this.items[index] = new Entry(key, value)
     } else {
       this.items.unshift(new Entry(key, value))
@@ -129,7 +129,7 @@ export class LRUMap<K extends KeyScalar, V> {
   }
 
   /**
-   * Removes an entry from the map and returns the removed entry's value
+   * Removes an entry from the map and returns the removed entry's value O(N)
    *
    * @param {K} key the key
    * @return {*}  {Nullable<V>} the removed item, which could be null
@@ -138,7 +138,7 @@ export class LRUMap<K extends KeyScalar, V> {
   remove(key: K): Nullable<V> {
     if (!this.has(key))
       return null
-    const index = this.frames[key]
+    const index = this.frames.get(key)
     const { value } = this.items[index]
     this.items.splice(index, 1)
     this.dropFrame(key)
@@ -146,7 +146,7 @@ export class LRUMap<K extends KeyScalar, V> {
   }
 
   /**
-   * Removes an entry from the map
+   * Removes an entry from the map O(N)
    *
    * @param {K} key
    * @return {*}  {boolean}
@@ -157,7 +157,7 @@ export class LRUMap<K extends KeyScalar, V> {
   }
 
   /**
-   * The oldest entry in the map (access foes not register recent use)
+   * The oldest entry in the map (access foes not register recent use) O(1)
    *
    * @return {*}  {MapEntry<K, V>} the entry
    * @memberof LRUMap
@@ -167,7 +167,7 @@ export class LRUMap<K extends KeyScalar, V> {
   }
 
   /**
-   * The newest entry in the map (access foes not register recent use)
+   * The newest entry in the map (access foes not register recent use) O(1)
    *
    * @return {*}  {MapEntry<K, V>} the entry
    * @memberof LRUMap
@@ -177,14 +177,14 @@ export class LRUMap<K extends KeyScalar, V> {
   }
 
   /**
-   * Check if a key is present in the map
+   * Check if a key is present in the map O(1)
    *
    * @param {K} key
    * @return {*}  {boolean}
    * @memberof LRUMap
    */
   has(key: K): boolean {
-    return !!this.frames[key]
+    return this.frames.has(key)
   }
 
   /**
@@ -194,7 +194,7 @@ export class LRUMap<K extends KeyScalar, V> {
    */
   clear() {
     this.items = []
-    this.frames = {}
+    this.frames.clear()
   }
 
   /**
@@ -299,16 +299,15 @@ export class LRUMap<K extends KeyScalar, V> {
    * @memberof LRUMap
    */
   private dropFrame(key: K) {
-    const keys = Object.keys(this.frames) as K[]
+    const keys = [...this.frames.keys()]
     const index = keys.indexOf(key)
     keys.splice(index, 1)
-    const nextFrames: FrameObject = {}
+    this.frames.clear()
     const length = this.capacity > -1
       ? Math.min(keys.length, this.capacity)
       : keys.length
     for (let i = 0; i < length; i++)
-      nextFrames[keys[i]] = i
-    this.frames = nextFrames
+      this.frames.set(keys[i], i)
   }
 
   /**
@@ -320,18 +319,18 @@ export class LRUMap<K extends KeyScalar, V> {
    * @memberof LRUMap
    */
   private promoteFrame(key: K) {
-    const keys = Object.keys(this.frames) as K[]
+    const keys = [...this.frames.keys()]
     const index = keys.indexOf(key)
     if (index > -1)
       keys.splice(index, 1)
     keys.unshift(key)
-    const nextFrames: FrameObject = {}
+    this.frames.clear()
     const length = this.capacity > -1
       ? Math.min(keys.length, this.capacity)
       : keys.length
-    for (let i = 0; i < length; i++)
-      nextFrames[keys[i]] = i
-    this.frames = nextFrames
+    for (let i = 0; i < length; i++) {
+      this.frames.set(keys[i], i)
+    }
   }
 
   /**
@@ -342,7 +341,7 @@ export class LRUMap<K extends KeyScalar, V> {
    */
   private evictOverflow() {
     if (this.capacity > -1)
-      this.items.splice(Object.keys(this.frames).length)
+      this.items.splice(this.frames.size)
   }
 
   /**

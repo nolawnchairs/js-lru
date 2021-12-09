@@ -58,6 +58,26 @@ describe('Check functionality of LRU Map', () => {
     expect(map.size).toEqual(0)
   })
 
+  it('should properly update new items and evict old ones', () => {
+    const map = new LRUMap(5) // []
+    for (let i = 0; i < 10; i++)
+      map.set(String.fromCharCode(i + 65), i + 1)
+    expect(map.peek('J')).toBe(10)
+    expect(map.peek('F')).toBe(6)
+    expect(map.peek('A')).toBeNull()
+    expect(map.head.key).toBe('J')
+    expect(map.tail.key).toBe('F')
+  })
+
+  it('should treat numeric strings the same', () => {
+    const map = new LRUMap(5)
+    for (let i = 0; i < 10; i++)
+      map.set(i, i)
+    expect(map.peek(1)).toBe(null)
+    expect(map.peek(9)).toBe(9)
+    expect(map.peek(5)).toBe(5)
+  })
+
   it('can handle 10000 entries', () => {
     const e = []
     for (let i = 0; i < 10000; i++)
@@ -85,7 +105,7 @@ describe('Check functionality of LRU Map', () => {
     map.get('b') // I, E, G, D
     const frames = map['frames']
     const items = map['items']
-    expect(items.length).toEqual(Object.entries(frames).length)
+    expect(items.length).toEqual(frames.size)
     for (const [k, i] of Object.entries(frames)) {
       expect(items[i].key).toBe(k)
     }

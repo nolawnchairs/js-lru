@@ -11,7 +11,7 @@
  * @template V the type of the map values
  */
 export declare class LRUMap<K extends KeyScalar, V> {
-	private readonly capacity;
+	readonly capacity: number;
 	private items;
 	private frames;
 	/**
@@ -41,7 +41,7 @@ export declare class LRUMap<K extends KeyScalar, V> {
 		V
 	]>): LRUMap<K, V>;
 	/**
-	 * Gets the size of the collection
+	 * Gets the size of the collection O(1)
 	 *
 	 * @readonly
 	 * @type {number}
@@ -49,7 +49,7 @@ export declare class LRUMap<K extends KeyScalar, V> {
 	 */
 	get size(): number;
 	/**
-	 * Gets an entry value from the map and registers recent use
+	 * Gets an entry value from the map and registers recent use O(1)
 	 *
 	 * @param {K} key the key
 	 * @return {*}  {Nullable<V>} the value, which could be null
@@ -57,7 +57,7 @@ export declare class LRUMap<K extends KeyScalar, V> {
 	 */
 	get(key: K): Nullable<V>;
 	/**
-	 * Peeks at an entry value without registering recent use
+	 * Peeks at an entry value without registering recent use O(1)
 	 *
 	 * @param {K} key the key
 	 * @return {*}  {Nullable<V>} the value which could be null
@@ -66,7 +66,7 @@ export declare class LRUMap<K extends KeyScalar, V> {
 	peek(key: K): Nullable<V>;
 	/**
 	 * Sets or replaces an entry in the map with key and
-	 * registers recent use
+	 * registers recent use O(N)
 	 *
 	 * @param {K} key the key
 	 * @param {V} value the value
@@ -74,7 +74,7 @@ export declare class LRUMap<K extends KeyScalar, V> {
 	 */
 	set(key: K, value: V): this;
 	/**
-	 * Removes an entry from the map and returns the removed entry's value
+	 * Removes an entry from the map and returns the removed entry's value O(N)
 	 *
 	 * @param {K} key the key
 	 * @return {*}  {Nullable<V>} the removed item, which could be null
@@ -82,7 +82,7 @@ export declare class LRUMap<K extends KeyScalar, V> {
 	 */
 	remove(key: K): Nullable<V>;
 	/**
-	 * Removes an entry from the map
+	 * Removes an entry from the map O(N)
 	 *
 	 * @param {K} key
 	 * @return {*}  {boolean}
@@ -90,21 +90,21 @@ export declare class LRUMap<K extends KeyScalar, V> {
 	 */
 	delete(key: K): boolean;
 	/**
-	 * The oldest entry in the map (access foes not register recent use)
+	 * The oldest entry in the map (access foes not register recent use) O(1)
 	 *
 	 * @return {*}  {MapEntry<K, V>} the entry
 	 * @memberof LRUMap
 	 */
 	get tail(): MapEntry<K, V>;
 	/**
-	 * The newest entry in the map (access foes not register recent use)
+	 * The newest entry in the map (access foes not register recent use) O(1)
 	 *
 	 * @return {*}  {MapEntry<K, V>} the entry
 	 * @memberof LRUMap
 	 */
 	get head(): MapEntry<K, V>;
 	/**
-	 * Check if a key is present in the map
+	 * Check if a key is present in the map O(1)
 	 *
 	 * @param {K} key
 	 * @return {*}  {boolean}
