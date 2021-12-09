@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "target": "es2018",
+      "lib": [
+        "es2015",
+        "esnext"
+      ],
+      "sourceMap": true,
+      "emitDecoratorMetadata": false,
+      "experimentalDecorators": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "strict": false,
+      "noUnusedLocals": false,
+      "strictPropertyInitialization": false,
+      "removeComments": true,
+      "outDir": "./build"
+    },
+    "include": [
+      "./src/**/*"
+    ]
+  }
