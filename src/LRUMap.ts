@@ -357,7 +357,7 @@ abstract class LRUAbstractMap<K extends KeyScalar, V> {
  * items are evicted once the defined item capacity is surpassed
  *
  * @export
- * @class LRUStandardMap
+ * @class LRUMap
  * @template K the type of the map keys, constrained to string, number or symbol
  * @template V the type of the map values
  */
