@@ -1,5 +1,5 @@
 
-import { LRUSizedArray } from '.'
+import { LRUSizedArray } from './LRUArray'
 import { Nullable, KeyScalar } from './Types'
 
 enum LRUMemoryStrategy {
