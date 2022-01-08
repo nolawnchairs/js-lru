@@ -1,10 +1,10 @@
 
 /**
- * Discriminator function that is used to get an
- * element by property
+ * Represents a value of type T that may be null
  */
-export type Discriminator<T, U> = (value: T) => U
-
 export type Nullable<T> = T
 
+/**
+ * Represents a type that can be used as a Map key
+ */
 export type KeyScalar = string | number | symbol
