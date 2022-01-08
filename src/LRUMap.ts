@@ -400,7 +400,7 @@ export class LRUMap<K extends KeyScalar, V> extends LRUAbstractMap<K, V> {
  * LRU affinity is based on the total bytes stored. Oldest item(s) are
  * evicted once the defined max byte capacity is surpassed. Max byte
  * capacity only registers the size of the entry's _value_. Actual byte sizes
- * of the keys and the map structure itself have no bearing on the
+ * of the keys and the map structure itself have no impact on the
  * calculated memory footprint of the data set as a whole.
  *
  * Since this LRU implementation must keep track of the byte size consumed
@@ -411,12 +411,12 @@ export class LRUMap<K extends KeyScalar, V> extends LRUAbstractMap<K, V> {
  * @export
  * @class LRUSizedMap
  * @template K the type of the map keys, constrained to string, number or symbol
- * @template V the type of the map values
+ * @template V the type of the map values, constrained to String, Buffer and LRUSizedArray
  */
 export class LRUSizedMap<K extends KeyScalar, V extends ByteLengthAware> extends LRUAbstractMap<K, V> {
 
   // Current tally of bytes used
-  private bytesUsed: number = 0
+  private bytesUsed = 0
 
   /**
    * Creates an instance of an LRUMap that manages its size by the accumulated
