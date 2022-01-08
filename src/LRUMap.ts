@@ -340,7 +340,7 @@ abstract class LRUAbstractMap<K extends KeyScalar, V> {
    * @memberof LRUAbstractMap
    */
   toString(): string {
-    let s = 'LRUAbstractMap {'
+    let s = `${this.constructor.name} {`
     let i = this.size - 1
     for (const { key, value: value } of this.entryIterator())
       s += `\n  Entry { ord: ${i--}, key: '${key}', value: '${value}' }`
