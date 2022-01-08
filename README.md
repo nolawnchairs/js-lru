@@ -146,7 +146,12 @@ for (const [key, value] of map) {
 ## LRUSizedMap
 
 ```ts
-class LRUSizedMap<K extends KeyScalar, V extends { length: number }>
+class LRUSizedMap<K extends KeyScalar, V extends ByteLengthAware>
+```
+
+The `ByteLengthAware` type is an alias for the following:
+```ts
+type ByteLengthAware = string | Buffer | LRUSizedArray<ByteLengthAware>
 ```
 
 The standard LRUMap class keeps and evicts its entries based on the **count** of entries. While useful when most entry values are of similar size, the `LRUSizedMap` gives finer-grained control over the memory footprint by using the actual size, or **length** of the values to determine the eviction of entries. This is especially useful when dealing with larger quantities of binary data, or when using items with great variations in size which makes predicting overall memory usage difficult.
@@ -204,7 +209,7 @@ Therefore, this library includes a simple wrapper around the native Javascript A
 the value's byte size.
 
 ```ts
-export class LRUSizedArray<T extends { length: number }> 
+export class LRUSizedArray<T extends ByteLengthAware> 
 ```
 
 Wrap a native JS array with `LRUSizedArray`
