@@ -154,9 +154,9 @@ The `ByteLengthAware` type is an alias for the following:
 type ByteLengthAware = string | Buffer | LRUSizedArray<ByteLengthAware>
 ```
 
-The standard LRUMap class keeps and evicts its entries based on the **count** of entries. While useful when most entry values are of similar size, the `LRUSizedMap` gives finer-grained control over the memory footprint by using the actual size, or **length** of the values to determine the eviction of entries. This is especially useful when dealing with larger quantities of binary data, or when using items with great variations in size which makes predicting overall memory usage difficult.
+The standard `LRUMap` class keeps and evicts its entries based on the **count** of entries. While useful when most entry values are of similar size, the `LRUSizedMap` gives finer-grained control over the memory footprint by using the actual size, or **length** of the values to determine the eviction of entries. This is especially useful when dealing with larger quantities of binary data, or when using items with great variations in size which makes predicting overall memory usage difficult.
 
-the `LRUSizedMap` will only accept `String` and `Buffer` types, as these report the actual byte length they consume, which facilitates the map keeping track of its memory footprint. If a collection of data is required, values can also be of type [LRUSizedArray](#LRUSizedArray), which is a wrapper around the native Javascript array, but where the `length` method reports the actual byte size of all accumulated items.
+the `LRUSizedMap` will only accept `String`, `Buffer` and [LRUSizedArray](#LRUSizedArray) types, as these report the actual byte length they consume, which facilitates the map keeping track of its memory footprint.
 
 The `LRUSizedMap` class constructor takes the same arguments as the standard `LRUMap`, but the first argument is the limit on **byte length** as opposed to the actual count of entries to hold.
 
@@ -205,8 +205,9 @@ The `LRUSizedMap` class does not allow an `unbounded` version, as this defeats i
 
 Arrays cannot be used directly with the `LRUSizedMap`, as their length properties report the number of items in the collection, and not the actual byte size that the LRU expects.
 
-Therefore, this library includes a simple wrapper around the native Javascript Array type It's only limitation is the same as that of the `LRUSizedMap`, being that it will only accept objects with a `length` property that correctly reports
-the value's byte size.
+Therefore, this library includes a simple wrapper around the native Javascript Array type.
+
+It's only limitation is that the types it can hold are constrained by the same `ByteLengthAware` type that the `LRUSizedMap` does.
 
 ```ts
 export class LRUSizedArray<T extends ByteLengthAware> 
