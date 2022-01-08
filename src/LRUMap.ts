@@ -363,7 +363,7 @@ abstract class LRUAbstractMap<K extends KeyScalar, V> {
  */
 export class LRUMap<K extends KeyScalar, V> extends LRUAbstractMap<K, V> {
   /**
-   * Creates an instance of an LRUAbstractMap that manages its size by the number
+   * Creates an instance of an LRUMap that manages its size by the number
    * of entries
    *
    * @param {number} itemCapacity the maximum number of entries to hold
