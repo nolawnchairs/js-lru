@@ -530,6 +530,8 @@ export class LRUSizedMap<K extends KeyScalar, V extends ByteLengthAware> extends
    * @memberof LRUSizedMap
    */
   protected evictOverflow() {
+    if (!this.size)
+      return
     while (this.bytesUsed > this.capacity) {
       this.delete(this.tail.key)
     }
