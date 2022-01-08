@@ -3,225 +3,212 @@
 /// <reference types="node" />
 
 declare abstract class LRUAbstractMap<K extends KeyScalar, V> {
-  readonly strategy: LRUMemoryStrategy;
-  readonly capacity: number;
-  protected items: Entry<K, V>[];
-  protected frames: Map<K, number>;
-  /**
-   * Creates an instance of LRUAbstractMap.
-   *
-   * @param {number} capacity the maximum number of entries to hold
-   * @param {Iterable<[K, V]>} [entries] optional iterable of key-value tuples to initiate the map. LRU ordering is applied immediately to initial entries
-   * @throws {Error} if the capacity for a standard LRUMap is 0 or 1
-   * @memberof LRUAbstractMap
-   */
-  constructor(strategy: LRUMemoryStrategy, capacity: number, entries?: Iterable<[
-    K,
-    V
-  ]>);
-  /**
-   * Gets the size of the collection O(1)
-   *
-   * @readonly
-   * @type {number}
-   * @memberof LRUAbstractMap
-   */
-  get size(): number;
-  /**
-   * Gets an entry value from the map and registers recent use O(1)
-   *
-   * @param {K} key the key
-   * @return {*}  {Nullable<V>} the value, which could be null
-   * @memberof LRUAbstractMap
-   */
-  get(key: K): Nullable<V>;
-  /**
-   * Peeks at an entry value without registering recent use O(1)
-   *
-   * @param {K} key the key
-   * @return {*}  {Nullable<V>} the value which could be null
-   * @memberof LRUAbstractMap
-   */
-  peek(key: K): Nullable<V>;
-  /**
-   * Sets or replaces an entry in the map with key and
-   * registers recent use O(N)
-   *
-   * @param {K} key the key
-   * @param {V} value the value
-   * @memberof LRUAbstractMap
-   */
-  set(key: K, value: V): this;
-  /**
-   * Removes an entry from the map and returns the removed entry's value O(N)
-   *
-   * @param {K} key the key
-   * @return {*}  {Nullable<V>} the removed item, which could be null
-   * @memberof LRUAbstractMap
-   */
-  remove(key: K): Nullable<V>;
-  /**
-   * Removes an entry from the map O(N)
-   *
-   * @param {K} key
-   * @return {*}  {boolean}
-   * @memberof LRUAbstractMap
-   */
-  delete(key: K): boolean;
-  /**
-   * The oldest entry in the map (access foes not register recent use) O(1)
-   *
-   * @return {*}  {MapEntry<K, V>} the entry
-   * @memberof LRUAbstractMap
-   */
-  get tail(): MapEntry<K, V>;
-  /**
-   * The newest entry in the map (access foes not register recent use) O(1)
-   *
-   * @return {*}  {MapEntry<K, V>} the entry
-   * @memberof LRUAbstractMap
-   */
-  get head(): MapEntry<K, V>;
-  /**
-   * Check if a key is present in the map O(1)
-   *
-   * @param {K} key
-   * @return {*}  {boolean}
-   * @memberof LRUAbstractMap
-   */
-  has(key: K): boolean;
-  /**
-   * Clears all entries from the map
-   *
-   * @memberof LRUAbstractMap
-   */
-  clear(): void;
-  /**
-   * Iterates over each entry and applies a callback function to each
-   * entry without registering recent uses
-   *
-   * @param {(value: V, key: K, map: Map<K, V>) => void} callbackfn
-   * @param {*} [thisArg]
-   * @memberof LRUAbstractMap
-   */
-  forEach(callbackfn: (value: V, key: K, map: Map<K, V>) => void, thisArg?: any): void;
-  /**
-   * Iterates over all entries in the map without
-   * registering recent uses
-   *
-   * @memberof LRUAbstractMap
-   */
-  [Symbol.iterator](): Generator<[
-    K,
-    V
-  ], void, unknown>;
-  /**
-   * Get an iterator of all map entries in tuple form without registering
-   * recent uses
-   *
-   * @return {*}  {IterableIterator<[K, V]>}
-   * @memberof LRUAbstractMap
-   */
-  entries(): IterableIterator<[
-    K,
-    V
-  ]>;
-  /**
-   * Gets an iterator of all map entries without registering recent uses
-   *
-   * @return {*}  {IterableIterator<MapEntry<K, V>>}
-   * @memberof LRUAbstractMap
-   */
-  entryIterator(): IterableIterator<MapEntry<K, V>>;
-  /**
-   * Get an iterator of all entry keys without registering any
-   * recent uses
-   *
-   * @return {*}  {IterableIterator<K>}
-   * @memberof LRUAbstractMap
-   */
-  keys(): IterableIterator<K>;
-  /**
-   * Get an iterator of all entry values without registering any
-   * recent uses
-   *
-   * @return {*}  {IterableIterator<V>}
-   * @memberof LRUAbstractMap
-   */
-  values(): IterableIterator<V>;
-  /**
-   * Converts the map to an array of entry values, returned in the
-   * order of least recently used items first. Does not register any
-   * recent uses
-   *
-   * @return {*}  {V[]}
-   * @memberof LRUAbstractMap
-   */
-  toArray(): V[];
-  /**
-   * Removes an item from the frame index and
-   * reorders the indexing
-   *
-   * @protected
-   * @param {K} key
-   * @memberof LRUAbstractMap
-   */
-  protected dropFrame(key: K): void;
-  /**
-   * Promotes a key to first frame index and
-   * reorders the indexing
-   *
-   * @protected
-   * @param {K} key
-   * @memberof LRUAbstractMap
-   */
-  protected promoteFrame(key: K): void;
-  /**
-   * Evict all oldest references that do not fit into the capacity
-   *
-   * @protected
-   * @memberof LRUAbstractMap
-   */
-  protected evictOverflow(): void;
-  /**
-   * Returns a string representation of the map
-   *
-   * @return {*} string
-   * @memberof LRUAbstractMap
-   */
-  toString(): string;
+	readonly strategy: LRUMemoryStrategy;
+	readonly capacity: number;
+	protected items: Entry<K, V>[];
+	protected frames: Map<K, number>;
+	/**
+	 * Creates an instance of LRUAbstractMap.
+	 *
+	 * @param {number} capacity the maximum number of entries to hold
+	 * @param {Iterable<[K, V]>} [entries] optional iterable of key-value tuples to initiate the map. LRU ordering is applied immediately to initial entries
+	 * @throws {Error} if the capacity for a standard LRUMap is 0 or 1
+	 * @memberof LRUAbstractMap
+	 */
+	constructor(strategy: LRUMemoryStrategy, capacity: number, entries?: Iterable<[
+		K,
+		V
+	]>);
+	/**
+	 * Gets the size of the collection O(1)
+	 *
+	 * @readonly
+	 * @type {number}
+	 * @memberof LRUAbstractMap
+	 */
+	get size(): number;
+	/**
+	 * Gets an entry value from the map and registers recent use O(1)
+	 *
+	 * @param {K} key the key
+	 * @return {*}  {Nullable<V>} the value, which could be null
+	 * @memberof LRUAbstractMap
+	 */
+	get(key: K): Nullable<V>;
+	/**
+	 * Peeks at an entry value without registering recent use O(1)
+	 *
+	 * @param {K} key the key
+	 * @return {*}  {Nullable<V>} the value which could be null
+	 * @memberof LRUAbstractMap
+	 */
+	peek(key: K): Nullable<V>;
+	/**
+	 * Sets or replaces an entry in the map with key and
+	 * registers recent use O(N)
+	 *
+	 * @param {K} key the key
+	 * @param {V} value the value
+	 * @memberof LRUAbstractMap
+	 */
+	set(key: K, value: V): this;
+	/**
+	 * Removes an entry from the map and returns the removed entry's value O(N)
+	 *
+	 * @param {K} key the key
+	 * @return {*}  {Nullable<V>} the removed item, which could be null
+	 * @memberof LRUAbstractMap
+	 */
+	remove(key: K): Nullable<V>;
+	/**
+	 * Removes an entry from the map O(N)
+	 *
+	 * @param {K} key
+	 * @return {*}  {boolean}
+	 * @memberof LRUAbstractMap
+	 */
+	delete(key: K): boolean;
+	/**
+	 * The oldest entry in the map (access foes not register recent use) O(1)
+	 *
+	 * @return {*}  {MapEntry<K, V>} the entry
+	 * @memberof LRUAbstractMap
+	 */
+	get tail(): MapEntry<K, V>;
+	/**
+	 * The newest entry in the map (access foes not register recent use) O(1)
+	 *
+	 * @return {*}  {MapEntry<K, V>} the entry
+	 * @memberof LRUAbstractMap
+	 */
+	get head(): MapEntry<K, V>;
+	/**
+	 * Check if a key is present in the map O(1)
+	 *
+	 * @param {K} key
+	 * @return {*}  {boolean}
+	 * @memberof LRUAbstractMap
+	 */
+	has(key: K): boolean;
+	/**
+	 * Clears all entries from the map
+	 *
+	 * @memberof LRUAbstractMap
+	 */
+	clear(): void;
+	/**
+	 * Iterates over each entry and applies a callback function to each
+	 * entry without registering recent uses
+	 *
+	 * @param {(value: V, key: K, map: Map<K, V>) => void} callbackfn
+	 * @param {*} [thisArg]
+	 * @memberof LRUAbstractMap
+	 */
+	forEach(callbackfn: (value: V, key: K, map: Map<K, V>) => void, thisArg?: any): void;
+	/**
+	 * Iterates over all entries in the map without
+	 * registering recent uses
+	 *
+	 * @memberof LRUAbstractMap
+	 */
+	[Symbol.iterator](): Generator<[
+		K,
+		V
+	], void, unknown>;
+	/**
+	 * Get an iterator of all map entries in tuple form without registering
+	 * recent uses
+	 *
+	 * @return {*}  {IterableIterator<[K, V]>}
+	 * @memberof LRUAbstractMap
+	 */
+	entries(): IterableIterator<[
+		K,
+		V
+	]>;
+	/**
+	 * Gets an iterator of all map entries without registering recent uses
+	 *
+	 * @return {*}  {IterableIterator<MapEntry<K, V>>}
+	 * @memberof LRUAbstractMap
+	 */
+	entryIterator(): IterableIterator<MapEntry<K, V>>;
+	/**
+	 * Get an iterator of all entry keys without registering any
+	 * recent uses
+	 *
+	 * @return {*}  {IterableIterator<K>}
+	 * @memberof LRUAbstractMap
+	 */
+	keys(): IterableIterator<K>;
+	/**
+	 * Get an iterator of all entry values without registering any
+	 * recent uses
+	 *
+	 * @return {*}  {IterableIterator<V>}
+	 * @memberof LRUAbstractMap
+	 */
+	values(): IterableIterator<V>;
+	/**
+	 * Converts the map to an array of entry values, returned in the
+	 * order of least recently used items first. Does not register any
+	 * recent uses
+	 *
+	 * @return {*}  {V[]}
+	 * @memberof LRUAbstractMap
+	 */
+	toArray(): V[];
+	/**
+	 * Removes an item from the frame index and
+	 * reorders the indexing
+	 *
+	 * @protected
+	 * @param {K} key
+	 * @memberof LRUAbstractMap
+	 */
+	protected dropFrame(key: K): void;
+	/**
+	 * Promotes a key to first frame index and
+	 * reorders the indexing
+	 *
+	 * @protected
+	 * @param {K} key
+	 * @memberof LRUAbstractMap
+	 */
+	protected promoteFrame(key: K): void;
+	/**
+	 * Evict all oldest references that do not fit into the capacity
+	 *
+	 * @protected
+	 * @memberof LRUAbstractMap
+	 */
+	protected evictOverflow(): void;
+	/**
+	 * Returns a string representation of the map
+	 *
+	 * @return {*} string
+	 * @memberof LRUAbstractMap
+	 */
+	toString(): string;
 }
 declare class Entry<K extends KeyScalar, V> implements MapEntry<K, V> {
-  readonly key: K;
-  readonly value: V;
-  constructor(key: K, value: V);
-  static of<K extends KeyScalar, V>([key, value]: [
-    K,
-    V
-  ]): Entry<K, V>;
+	readonly key: K;
+	readonly value: V;
+	constructor(key: K, value: V);
+	static of<K extends KeyScalar, V>([key, value]: [
+		K,
+		V
+	]): Entry<K, V>;
 }
 declare enum LRUMemoryStrategy {
-  /**
-   * LRU affinity will be tied to entry count
-   */
-  ITEMS = 0,
-  /**
-   * LRU affinity will be tied to entry value byte length
-   */
-  BYTES = 1
-}
-/**
- * Wrapper around the standard JS array where the length
- * property properly reports the actual byte size of its
- * elements
- *
- * @export
- * @class LRUArray
- * @extends {Array<T>}
- * @template T
- */
-export declare class LRUArray<T extends ByteLengthAware> extends Array<T> {
-  get length(): number;
+	/**
+	 * LRU affinity will be tied to entry count
+	 */
+	ITEMS = 0,
+	/**
+	 * LRU affinity will be tied to entry value byte length
+	 */
+	BYTES = 1
 }
 /**
  * Implementation of the ES6 Map interface that maintains a LRU
@@ -232,40 +219,74 @@ export declare class LRUArray<T extends ByteLengthAware> extends Array<T> {
  * items are evicted once the defined item capacity is surpassed
  *
  * @export
- * @class LRUStandardMap
+ * @class LRUMap
  * @template K the type of the map keys, constrained to string, number or symbol
  * @template V the type of the map values
  */
 export declare class LRUMap<K extends KeyScalar, V> extends LRUAbstractMap<K, V> {
-  /**
-   * Creates an instance of an LRUAbstractMap that manages its size by the number
-   * of entries
-   *
-   * @param {number} itemCapacity the maximum number of entries to hold
-   * @param {Iterable<[K, V]>} [entries] optional iterable of key-value tuples to initiate the map. LRU ordering is applied immediately to initial entries
-   * @memberof LRUMap
-   */
-  constructor(itemCapacity: number, entries?: Iterable<[
-    K,
-    V
-  ]>);
-  /**
-   * Creates an unbounded LURMap instance that can hold an
-   * infinite number of entries. Note that items therefore will
-   * never be evicted, but will still reside in the LRU sorting,
-   * so be aware of possible memory and performance implications
-   *
-   * @static
-   * @template K the type of the map keys, constrained to string, number or symbol
-   * @template V the type of the map values
-   * @param {Iterable<[K, V]>} [entries] optional iterable of key-value tuples to initiate the map. LRU ordering is applied immediately to initial entries
-   * @return {*}  {LRUAbstractMap<K,V>}
-   * @memberof LRUMap
-   */
-  static unbounded<K extends KeyScalar, V>(entries?: Iterable<[
-    K,
-    V
-  ]>): LRUMap<K, V>;
+	/**
+	 * Creates an instance of an LRUMap that manages its size by the number
+	 * of entries
+	 *
+	 * @param {number} itemCapacity the maximum number of entries to hold
+	 * @param {Iterable<[K, V]>} [entries] optional iterable of key-value tuples to initiate the map. LRU ordering is applied immediately to initial entries
+	 * @memberof LRUMap
+	 */
+	constructor(itemCapacity: number, entries?: Iterable<[
+		K,
+		V
+	]>);
+	/**
+	 * Creates an unbounded LURMap instance that can hold an
+	 * infinite number of entries. Note that items therefore will
+	 * never be evicted, but will still reside in the LRU sorting,
+	 * so be aware of possible memory and performance implications
+	 *
+	 * @static
+	 * @template K the type of the map keys, constrained to string, number or symbol
+	 * @template V the type of the map values
+	 * @param {Iterable<[K, V]>} [entries] optional iterable of key-value tuples to initiate the map. LRU ordering is applied immediately to initial entries
+	 * @return {*}  {LRUAbstractMap<K,V>}
+	 * @memberof LRUMap
+	 */
+	static unbounded<K extends KeyScalar, V>(entries?: Iterable<[
+		K,
+		V
+	]>): LRUMap<K, V>;
+}
+/**
+ * Wrapper around the standard JS array where the length
+ * property properly reports the actual byte size of its
+ * elements
+ *
+ * @export
+ * @class LRUArray
+ * @template T
+ */
+export declare class LRUSizedArray<T extends ByteLengthAware> {
+	private readonly array;
+	/**
+	 * Creates an instance of LRUArray.
+	 * @param {Iterable<T>} [items]
+	 * @memberof LRUArray
+	 */
+	constructor(items?: Iterable<T>);
+	/**
+	 * Get the underlying array
+	 *
+	 * @readonly
+	 * @type {Array<T>}
+	 * @memberof LRUArray
+	 */
+	get items(): Array<T>;
+	/**
+	 * Get the actual byte length of the array's items
+	 *
+	 * @readonly
+	 * @type {number}
+	 * @memberof LRUArray
+	 */
+	get length(): number;
 }
 /**
  * Implementation of the ES6 Map interface that maintains a LRU
@@ -275,124 +296,117 @@ export declare class LRUMap<K extends KeyScalar, V> extends LRUAbstractMap<K, V>
  * LRU affinity is based on the total bytes stored. Oldest item(s) are
  * evicted once the defined max byte capacity is surpassed. Max byte
  * capacity only registers the size of the entry's _value_. Actual byte sizes
- * of the keys and the map structure itself have no bearing on the
+ * of the keys and the map structure itself have no impact on the
  * calculated memory footprint of the data set as a whole.
  *
- * Values must be objects that contain a 'length' property, such as
- * String or Buffer. LRUSizedMap will assume such a length property
- * reflects the amount of bytes the object consumes, and will manage
- * the memory usage based on this assumption. Ergo, Arrays should NOT
- * be used, and will cause an error to be thrown if attempting to use
- * one as a value.
+ * Since this LRU implementation must keep track of the byte size consumed
+ * by the entry values, values types are constrained to String and Buffer types,
+ * as well as LRUSizedArray which wraps a native Javascript array, which is also
+ * constrained by those same types.
  *
  * @export
  * @class LRUSizedMap
  * @template K the type of the map keys, constrained to string, number or symbol
- * @template V the type of the map values
+ * @template V the type of the map values, constrained to String, Buffer and LRUSizedArray
  */
 export declare class LRUSizedMap<K extends KeyScalar, V extends ByteLengthAware> extends LRUAbstractMap<K, V> {
-  private bytesUsed;
-  /**
-   * Creates an instance of an LRUMap that manages its size by the accumulated
-   * byte size of all entities. All entries must be of an object that contains a
-   * 'length' property that defines a byte size, such as String or Buffer.
-   *
-   * @param {number} maxBytes the maximum number of entries to hold
-   * @param {Iterable<[K, V]>} [entries] optional iterable of key-value tuples to initiate the map. LRU ordering is applied immediately to initial entries
-   * @throws {Error} if a zero or negative value is supplied for the maxBytes parameter
-   * @throws {Error} if an array is included in the optional entries parameter
-   * @memberof LRUSizedMap
-   */
-  constructor(maxBytes: number, entries?: Iterable<[
-    K,
-    V
-  ]>);
-  /**
-   * Gets the current byte size of the data set
-   *
-   * @readonly
-   * @type {number}
-   * @memberof LRUSizedMap
-   */
-  get used(): number;
-  /**
-   * Sets or replaces an entry in the map with key and
-   * registers recent use O(N)
-   *
-   * Note that this method may cause the overall memory footprint
-   * to exceed the max bytes capacity momentarily, as the eviction process
-   * will occur _after_ the new entry's insertion. To ensure eviction will
-   * occur prior to insertion, run the 'accommodate' method before calling 'set'.
-   *
-   * @override
-   * @param {K} key the key
-   * @param {V} value the value
-   * @return {*}  {this}
-   * @memberof LRUSizedMap
-   * @throws {Error} if an object without a 'length' property is provided to the value parameter
-   * @throws {Error} if an array is provided to the value parameter
-   */
-  set(key: K, value: V): this;
-  /**
-   * Ensures the memory capacity will not overflow prior to inserting
-   * or updating an entry with 'set' by removing the least recently used
-   * items until the LRU map can accommodate the new value's size
-   *
-   * @param {number} bytes the byte size to clear
-   * @return {*}  {this}
-   * @memberof LRUSizedMap
-   */
-  accommodate(bytes: number): this;
-  /**
-   * Removes an entry from the map and returns the removed entry's value O(N)
-   *
-   * @override
-   * @param {K} key the key
-   * @return {*}  {Nullable<V>} the removed item, which could be null
-   * @memberof LRUSizedMap
-   */
-  remove(key: K): Nullable<V>;
-  /**
-   * Clears all entries from the map
-   *
-   * @override
-   * @memberof LRUSizedMap
-   */
-  clear(): void;
-  /**
-   * Evict all oldest references that do not fit into the capacity
-   *
-   * @override
-   * @protected
-   * @memberof LRUSizedMap
-   */
-  protected evictOverflow(): void;
-  /**
-   * Asserts the value is not an array and contains a 'length' property
-   * by throwing an error if either constraint is violated
-   *
-   * @private
-   * @param {V} value
-   * @memberof LRUSizedMap
-   */
-  private assertValueIsValid;
+	private bytesUsed;
+	/**
+	 * Creates an instance of an LRUMap that manages its size by the accumulated
+	 * byte size of all entities. All entries must be String, Buffer or LRUSizedArray.
+	 *
+	 * @param {number} maxBytes the maximum number of entries to hold
+	 * @param {Iterable<[K, V]>} [entries] optional iterable of key-value tuples to initiate the map. LRU ordering is applied immediately to initial entries
+	 * @throws {Error} if a zero or negative value is supplied for the maxBytes parameter
+	 * @throws {Error} if an invalid type is detected as an item in the optional entries parameter
+	 * @memberof LRUSizedMap
+	 */
+	constructor(maxBytes: number, entries?: Iterable<[
+		K,
+		V
+	]>);
+	/**
+	 * Gets the current byte size of the data set
+	 *
+	 * @readonly
+	 * @type {number}
+	 * @memberof LRUSizedMap
+	 */
+	get used(): number;
+	/**
+	 * Sets or replaces an entry in the map with key and
+	 * registers recent use O(N)
+	 *
+	 * Note that this method may cause the overall memory footprint
+	 * to exceed the max bytes capacity momentarily, as the eviction process
+	 * will occur _after_ the new entry's insertion. To ensure eviction will
+	 * occur prior to insertion, run the 'accommodate' method before calling 'set'.
+	 *
+	 * @override
+	 * @param {K} key the key
+	 * @param {V} value the value
+	 * @return {*}  {this}
+	 * @memberof LRUSizedMap
+	 * @throws {Error} if an invalid type is provided as the value
+	 */
+	set(key: K, value: V): this;
+	/**
+	 * Ensures the memory capacity will not overflow prior to inserting
+	 * or updating an entry with 'set' by removing the least recently used
+	 * items until the LRU map can accommodate the new value's size
+	 *
+	 * @param {number} bytes the byte size to clear
+	 * @return {*}  {this}
+	 * @memberof LRUSizedMap
+	 */
+	accommodate(bytes: number): this;
+	/**
+	 * Removes an entry from the map and returns the removed entry's value O(N)
+	 *
+	 * @override
+	 * @param {K} key the key
+	 * @return {*}  {Nullable<V>} the removed item, which could be null
+	 * @memberof LRUSizedMap
+	 */
+	remove(key: K): Nullable<V>;
+	/**
+	 * Clears all entries from the map
+	 *
+	 * @override
+	 * @memberof LRUSizedMap
+	 */
+	clear(): void;
+	/**
+	 * Evict all oldest references that do not fit into the capacity
+	 *
+	 * @override
+	 * @protected
+	 * @memberof LRUSizedMap
+	 */
+	protected evictOverflow(): void;
+	/**
+	 * Asserts the value is of an acceptable type
+	 *
+	 * @private
+	 * @param {V} value
+	 * @memberof LRUSizedMap
+	 */
+	private assertValueIsValid;
 }
+export declare type ByteLengthAware = string | Buffer | LRUSizedArray<ByteLengthAware>;
 /**
  * Represents a type that can be used as a Map key
  */
 export declare type KeyScalar = string | number | symbol;
-export declare type ByteLengthAware = {
-  length: number;
-};
 /**
  * Represents a value of type T that may be null
  */
 export declare type Nullable<T> = T;
 export interface MapEntry<K, V> {
-  key: K;
-  value: V;
+	key: K;
+	value: V;
 }
 
 export as namespace MyModuleName;
 
-export { };
+export {};
