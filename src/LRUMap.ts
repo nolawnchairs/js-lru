@@ -490,6 +490,8 @@ export class LRUSizedMap<K extends KeyScalar, V extends ByteLengthAware> extends
    * @memberof LRUSizedMap
    */
   accommodate(bytes: number): this {
+    if (!this.size)
+      return this
     while (this.bytesUsed + bytes > this.capacity) {
       this.delete(this.tail.key)
     }
