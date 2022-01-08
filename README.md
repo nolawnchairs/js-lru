@@ -145,6 +145,8 @@ for (const [key, value] of map) {
 
 ## LRUSizedMap
 
+The standard `LRUMap` class keeps and evicts its entries based on the **count** of entries. While useful when most entry values are of similar size, the `LRUSizedMap` gives finer-grained control over the memory footprint by using the actual size, or **length** of the values to determine the eviction of entries. This is especially useful when dealing with larger quantities of binary data, or when using items with great variations in size which makes predicting overall memory usage difficult.
+
 ```ts
 class LRUSizedMap<K extends KeyScalar, V extends ByteLengthAware>
 ```
@@ -153,8 +155,6 @@ The `ByteLengthAware` type is an alias for the following:
 ```ts
 type ByteLengthAware = string | Buffer | LRUSizedArray<ByteLengthAware>
 ```
-
-The standard `LRUMap` class keeps and evicts its entries based on the **count** of entries. While useful when most entry values are of similar size, the `LRUSizedMap` gives finer-grained control over the memory footprint by using the actual size, or **length** of the values to determine the eviction of entries. This is especially useful when dealing with larger quantities of binary data, or when using items with great variations in size which makes predicting overall memory usage difficult.
 
 the `LRUSizedMap` will only accept `String`, `Buffer` and [LRUSizedArray](#LRUSizedArray) types, as these report the actual byte length they consume, which facilitates the map keeping track of its memory footprint.
 
