@@ -145,7 +145,7 @@ for (const [key, value] of map) {
 
 ## LRUSizedMap
 
-The standard `LRUMap` class keeps and evicts its entries based on the **count** of entries. While useful when most entry values are of similar size, the `LRUSizedMap` gives finer-grained control over the memory footprint by using the actual size, or **length** of the values to determine the eviction of entries. This is especially useful when dealing with larger quantities of binary data, or when using items with great variations in size which makes predicting overall memory usage difficult.
+The standard `LRUMap` class retains and evicts its entries based on the **count** of entries. While useful when most entry values are of similar size, the `LRUSizedMap` gives finer-grained control over the memory footprint by using the actual size, or **length** of the values to determine the eviction of entries. This is especially useful when dealing with larger quantities of binary data, or when using items with great variations where predicting overall memory usage is not practical.
 
 ```ts
 class LRUSizedMap<K extends KeyScalar, V extends ByteLengthAware>
