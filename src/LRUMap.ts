@@ -433,7 +433,6 @@ export class LRUSizedMap<K extends KeyScalar, V extends ByteLengthAware> extends
     if (maxBytes < 1)
       throw new Error(`Invalid maxBytes capacity (${maxBytes}). LRU byte capacity must be > 1`)
     if (entries) {
-      this.bytesUsed = [...this.values()].reduce((a, c) => a += c.length, 0)
       const all = [...entries].reverse()
       for (let i = 0; i < all.length; i++) {
         const [key, value] = all[i]
@@ -441,6 +440,7 @@ export class LRUSizedMap<K extends KeyScalar, V extends ByteLengthAware> extends
         this.accommodate(value.length)
         this.items.push(Entry.of([key, value]))
         this.frames.set(key, i)
+        this.bytesUsed += value.length
       }
     }
   }
